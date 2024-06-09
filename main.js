@@ -30,6 +30,7 @@ let enemies;
 let bullets;
 let bulletTime = 0;
 let isTouching = false;
+let gameOver = false;
 
 function preload() {
     console.log('Preload called');
@@ -44,7 +45,18 @@ function preload() {
     this.load.image('player_frame8', 'images/player/Exhaust_1_1_007.png');
     this.load.image('player_frame9', 'images/player/Exhaust_1_1_008.png');
     this.load.image('player_frame10', 'images/player/Exhaust_1_1_009.png');
-    this.load.image('enemy', 'images/enemy.png');
+    this.load.image('player_hit', 'images/player.png');
+    this.load.image('enemy_frame1', 'images/enemy/Flight_000.png');
+    this.load.image('enemy_frame2', 'images/enemy/Flight_001.png');
+    this.load.image('enemy_frame3', 'images/enemy/Flight_002.png');
+    this.load.image('enemy_frame4', 'images/enemy/Flight_003.png');
+    this.load.image('enemy_frame5', 'images/enemy/Flight_004.png');
+    this.load.image('enemy_frame6', 'images/enemy/Flight_005.png');
+    this.load.image('enemy_frame7', 'images/enemy/Flight_006.png');
+    this.load.image('enemy_frame8', 'images/enemy/Flight_007.png');
+    this.load.image('enemy_frame9', 'images/enemy/Flight_008.png');
+    this.load.image('enemy_frame10', 'images/enemy/Flight_009.png');
+    this.load.image('enemy_hit', 'images/enemy.png');
     this.load.image('bullet', 'images/bullet.png');
 }
 
@@ -118,60 +130,81 @@ function create() {
         repeat: -1
     });
 
+    this.anims.create({
+        key: 'EnemyFly',
+        frames: [
+            { key: 'enemy_frame1' },
+            { key: 'enemy_frame2' },
+            { key: 'enemy_frame3' },
+            { key: 'enemy_frame4' },
+            { key: 'enemy_frame5' },
+            { key: 'enemy_frame6' },
+            { key: 'enemy_frame7' },
+            { key: 'enemy_frame8' },
+            { key: 'enemy_frame9' },
+            { key: 'enemy_frame10' }
+        ],
+        frameRate: 10,
+        repeat: -1
+    });
+
     player.play('fly');
 }
 
 function update(time, delta) {
     console.log('Update called');
-    // Scrolling background
-    background.tilePositionY -= 2;
+    if (!gameOver) {
+        // Scrolling background
+        background.tilePositionY -= 2;
 
-    // Player controls
-    if (cursors.left.isDown) {
-        player.setVelocityX(-200);
-    } else if (cursors.right.isDown) {
-        player.setVelocityX(200);
-    } else {
-        player.setVelocityX(0);
-    }
-
-    if (cursors.up.isDown) {
-        player.setVelocityY(-200);
-    } else if (cursors.down.isDown) {
-        player.setVelocityY(200);
-    } else {
-        player.setVelocityY(0);
-    }
-
-    // Shooting bullets
-    if (cursors.space.isDown || isTouching) {
-        fireBullet(time);
-    }
-
-    // Respawn enemies
-    enemies.children.iterate(function (child) {
-        if (child.y > 600) {
-            child.y = 0;
-            child.x = Phaser.Math.Between(0, 800);
+        // Player controls
+        if (cursors.left.isDown) {
+            player.setVelocityX(-200);
+        } else if (cursors.right.isDown) {
+            player.setVelocityX(200);
+        } else {
+            player.setVelocityX(0);
         }
-    });
 
-    // Deactivate bullets that go off screen
-    bullets.children.iterate(function (bullet) {
-        if (bullet.active && bullet.y < 0) {
-            console.log(`Deactivating bullet at y=${bullet.y}`);
-            bullet.disableBody(true, true);
+        if (cursors.up.isDown) {
+            player.setVelocityY(-200);
+        } else if (cursors.down.isDown) {
+            player.setVelocityY(200);
+        } else {
+            player.setVelocityY(0);
         }
-    });
+
+        // Shooting bullets
+        if (cursors.space.isDown || isTouching) {
+            fireBullet(time);
+        }
+
+        // Respawn enemies
+        enemies.children.iterate(function (child) {
+            if (child.y > 600) {
+                child.y = 0;
+                child.x = Phaser.Math.Between(0, 800);
+            }
+        });
+
+        // Deactivate bullets that go off screen
+        bullets.children.iterate(function (bullet) {
+            if (bullet.active && bullet.y < 0) {
+                console.log(`Deactivating bullet at y=${bullet.y}`);
+                bullet.disableBody(true, true);
+            }
+        });
+    }
 }
 
 function spawnEnemy() {
     console.log('Spawn enemy');
     const x = Phaser.Math.Between(0, 800);
     const y = Phaser.Math.Between(-50, -10); // spawn slightly off-screen
-    const enemy = enemies.create(x, y, 'enemy');
+    const enemy = enemies.create(x, y, 'enemy_frame1'); // Create enemy with the first frame
     enemy.setScale(0.15);
     enemy.setVelocityY(100);
+    enemy.play('EnemyFly'); // Play enemy animation
 }
 
 function fireBullet(time) {
@@ -197,8 +230,13 @@ function movePlayer(x, y) {
 function hitEnemy(player, enemy) {
     console.log('Hit enemy');
     player.setTint(0xff0000);
+    player.anims.stop();
+    player.setTexture('player_hit'); // Change the player image to indicate hit
+    enemy.anims.stop();
+    enemy.setTexture('enemy_hit'); // Change the player image to indicate hit
     this.physics.pause(); // Pause the physics engine
     this.time.paused = true; // Stop all timed events
+    gameOver = true; // Set the game over flag
 }
 
 function hitEnemyWithBullet(bullet, enemy) {
