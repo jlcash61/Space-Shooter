@@ -46,16 +46,16 @@ function preload() {
     this.load.image('player_frame9', 'images/player/Exhaust_1_1_008.png');
     this.load.image('player_frame10', 'images/player/Exhaust_1_1_009.png');
     this.load.image('player_hit', 'images/player.png');
-    this.load.image('enemy_frame1', 'images/enemy/Flight_000.png');
-    this.load.image('enemy_frame2', 'images/enemy/Flight_001.png');
-    this.load.image('enemy_frame3', 'images/enemy/Flight_002.png');
-    this.load.image('enemy_frame4', 'images/enemy/Flight_003.png');
-    this.load.image('enemy_frame5', 'images/enemy/Flight_004.png');
-    this.load.image('enemy_frame6', 'images/enemy/Flight_005.png');
-    this.load.image('enemy_frame7', 'images/enemy/Flight_006.png');
-    this.load.image('enemy_frame8', 'images/enemy/Flight_007.png');
-    this.load.image('enemy_frame9', 'images/enemy/Flight_008.png');
-    this.load.image('enemy_frame10', 'images/enemy/Flight_009.png');
+    this.load.image('enemy_frame1', 'images/Enemy/Flight_000.png');
+    this.load.image('enemy_frame2', 'images/Enemy/Flight_001.png');
+    this.load.image('enemy_frame3', 'images/Enemy/Flight_002.png');
+    this.load.image('enemy_frame4', 'images/Enemy/Flight_003.png');
+    this.load.image('enemy_frame5', 'images/Enemy/Flight_004.png');
+    this.load.image('enemy_frame6', 'images/Enemy/Flight_005.png');
+    this.load.image('enemy_frame7', 'images/Enemy/Flight_006.png');
+    this.load.image('enemy_frame8', 'images/Enemy/Flight_007.png');
+    this.load.image('enemy_frame9', 'images/Enemy/Flight_008.png');
+    this.load.image('enemy_frame10', 'images/Enemy/Flight_009.png');
     this.load.image('enemy_hit', 'images/enemy.png');
     this.load.image('bullet', 'images/bullet.png');
 }
